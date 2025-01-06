@@ -1,0 +1,243 @@
+openapi: 3.0.3
+info:
+  title: Dummy API
+  version: "0.1"
+servers:
+  - url: http://127.0.0.1:8080
+    description: The dev API server
+paths:
+  /v1/articles:
+    get:
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Article'
+        "400":
+          description: "Bad Request"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+    post:
+      description: "Create article"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArticleInput'
+      responses:
+        "201":
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Article'
+        "400":
+          description: "Bad Request"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /v1/articles/{id}:
+    get:
+      parameters:
+        - name: id
+          description: "Article ID"
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Article'
+        "400":
+          description: "Bad Request"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        "404":
+          description: "Not Found"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /v1/sources:
+    get:
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Source'
+        "400":
+          description: "Bad Request"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /v1/sources/{id}:
+    get:
+      parameters:
+        - name: id
+          description: "Source identifier"
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Source'
+        "400":
+          description: "Bad Request"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        "404":
+          description: "Not Found"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+components:
+  schemas:
+    Article:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: "Article ID"
+        title:
+          type: string
+          description: "Article title"
+        url:
+          type: string
+          description: "URL to the article"
+        image_url:
+          type: string
+          description: "URL to the article image"
+        upvotes:
+          type: integer
+          description: "Article upvotes"
+        source_id:
+          type: string
+          description: "Source identifier"
+        date_posted:
+          type: string
+          format: date
+          description: "Date the article was posted"
+        date_added:
+          type: string
+          format: date
+          description: "Date the article was added"
+    ArticleInput:
+      type: object
+      properties:
+        title:
+          type: string
+          description: "Article title"
+        url:
+          type: string
+          description: "URL to the article"
+        image_url:
+          type: string
+          description: "URL to the article image"
+        upvotes:
+          type: integer
+          description: "Article upvotes"
+        source_id:
+          type: string
+          description: "Source identifier"
+        date_posted:
+          type: string
+          format: date
+          description: "Date the article was posted"
+      required:
+        - title
+        - url
+        - source_id
+        - date_posted
+    Source:
+      type: object
+      properties:
+        id:
+          type: string
+          description: "Source identifier"
+        name:
+          type: string
+          description: "Source name"
+        url:
+          type: string
+          description: "URL to the source"
+    Problem:
+      type: object
+      properties:
+        type:
+          type: string
+          description: "A URI reference that identifies the problem type"
+        title:
+          type: string
+          description: "A short, human-readable summary of the problem type"
+        status:
+          type: integer
+          description: "The HTTP status code generated by the server for this occurrence of the problem"
+        detail:
+          type: string
+          description: "A human-readable explanation specific to this occurrence of the problem"
+        instance:
+          type: string
+          description: "A URI reference that identifies the specific occurrence of the problem"
